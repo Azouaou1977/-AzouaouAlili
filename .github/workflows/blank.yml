@@ -1,0 +1,246 @@
+//Gestion d'une installation solaire. Azouaou ALILI 2017
+#include <SPI.h>
+#include <Ethernet.h>
+ 
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+byte ip[] = { 192, 168, 1, 200 };          
+byte gateway[] = { 192, 168, 1, 1 };           
+byte subnet[] = { 255, 255, 0, 0 };              
+Server server(80);                                                
+ 
+int Relais1 = 2;
+int Relais2 = 3;
+int Relais3 = 4;
+int Relais4 = 5;
+int Relais5= 6;
+int Relais6 = 7;
+int Relais7 = 8;
+int Relais8 = 9;
+ 
+String readString = String();
+String Valeur;
+ 
+void setup()
+{
+ 
+  Ethernet.begin(mac, ip, gateway, subnet);
+  pinMode(Relais1, OUTPUT);
+  pinMode(Relais2, OUTPUT);
+  pinMode(Relais3, OUTPUT);
+  pinMode(Relais4, OUTPUT);
+  pinMode(Relais5, OUTPUT);
+  pinMode(Relais6, OUTPUT);
+  pinMode(Relais7, OUTPUT);
+  pinMode(Relais8, OUTPUT);
+  digitalWrite(Relais1, LOW);
+  digitalWrite(Relais2, LOW);
+  digitalWrite(Relais3, LOW);
+  digitalWrite(Relais4, LOW);
+  digitalWrite(Relais5, LOW);
+  digitalWrite(Relais6, LOW);
+  digitalWrite(Relais7, LOW);
+  digitalWrite(Relais8, LOW);
+  Serial.begin(9600);
+}
+ 
+ 
+int essai(String n)
+{
+  //Action Relais 1
+  if (n=='A')
+  {
+    digitalWrite(Relais1, HIGH);
+  }
+  if (n=='a')
+  {
+    digitalWrite(Relais1, LOW);
+  }
+  //Action Relais 2
+  if (n=='B')
+  {
+    digitalWrite(Relais2, HIGH);
+  }
+  if (n=='b')
+  {
+    digitalWrite(Relais2, LOW);
+  }
+  //Action Relais 3
+  if (n=='C')
+  {
+    digitalWrite(Relais3, HIGH);
+  }
+  if (n=='c')
+  {
+    digitalWrite(Relais3, LOW);
+  }
+  //Action Relais 4
+  if (n=='D')
+  {
+    digitalWrite(Relais4, HIGH);
+  }
+  if (n=='d')
+  {
+    digitalWrite(Relais4, LOW);
+  }
+  //Action Relais 5
+  if (n=='E')
+  {
+    digitalWrite(Relais5, HIGH);
+  }
+  if (n=='e')
+  {
+    digitalWrite(Relais5, LOW);
+  }
+  //Action Relais 6
+  if (n=='F')
+  {
+    digitalWrite(Relais6, HIGH);
+  }
+  if (n=='f')
+  {
+    digitalWrite(Relais6, LOW);
+  }
+  //Action Relais 7
+  if (n=='G')
+  {
+    digitalWrite(Relais7, HIGH);
+  }
+  if (n=='g')
+  {
+    digitalWrite(Relais7, LOW);
+  }
+    //Action Relais 8
+  if (n=='H')
+  {
+    digitalWrite(Relais8, HIGH);
+  }
+  if (n=='h')
+  {
+    digitalWrite(Relais8, LOW);
+  }
+   
+}
+ 
+void loop()
+{
+  Client client = server.available();
+  if (client)
+  {
+    while (client.connected())
+    {
+      if (client.available())
+      {
+        char c = client.read();
+        if (readString.length() < 30)
+        {
+          readString.concat(c);
+        }
+        if (c == '\n')
+        {
+          Serial.println(readString);
+          Valeur = readString.substring (9,10);
+          essai(Valeur);
+           
+          client.print("<html><head><title>Domotique</title><style language='css'>table{text-align:center; color: white;}h1{color: white;}</style></head>");
+          client.println("<body BGCOLOR=CornflowerBlue><h1>Arduino</h1>");
+ 
+          client.println("<form method='get'>");
+ 
+          //checkbox Relais 1
+          if (digitalRead(Relais1)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R1 value='A'><input type='checkbox' onclick='this.form.submit();'>Relais 1");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R1 value='a'><input type='checkbox' onclick='this.form.submit();' checked>Relais 1");
+          }
+          //checkbox Relais 2
+          if (digitalRead(Relais2)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R2 value='B'><input type='checkbox' onclick='this.form.submit();'>Relais 2");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R2 value='b'><input type='checkbox' onclick='this.form.submit();' checked>Relais 2");
+          }
+          //checkbox Relais 3
+          if (digitalRead(Relais3)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R3 value='C'><input type='checkbox' onclick='this.form.submit();'>Relais 3");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R3 value='c'><input type='checkbox' onclick='this.form.submit();' checked>Relais 3");
+          }
+          //checkbox Relais 4
+          if (digitalRead(Relais4)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R4 value='D'><input type='checkbox' onclick='this.form.submit();'>Relais 4");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R4 value='d'><input type='checkbox' onclick='this.form.submit();' checked>Relais 4");
+          }
+          //checkbox Relais 5
+          if (digitalRead(Relais5)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R5 value='E'><input type='checkbox' onclick='this.form.submit();'>Relais 5");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R5 value='e'><input type='checkbox' onclick='this.form.submit();' checked>Relais 5");
+          }
+          //checkbox Relais 6
+          if (digitalRead(Relais6)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R6 value='F'><input type='checkbox' onclick='this.form.submit();'>Relais 6");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R6 value='f'><input type='checkbox' onclick='this.form.submit();' checked>Relais 6");
+          }
+          //checkbox Relais 7
+          if (digitalRead(Relais7)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R7 value='G'><input type='checkbox' onclick='this.form.submit();'>Relais 7");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R7 value='g'><input type='checkbox' onclick='this.form.submit();' checked>Relais 7");
+          }
+          //checkbox Relais 8
+          if (digitalRead(Relais8)==LOW)
+          {
+            //Si le relais n'est pas activé, on créer une checkbox non cochée
+            client.println("<input type=hidden name=R8 value='H'><input type='checkbox' onclick='this.form.submit();'>Relais 8");
+          }
+          else
+          {
+            //Si le relais est activé, on créer une checkbox cochée
+            client.println("<input type=hidden name=R8 value='h'><input type='checkbox' onclick='this.form.submit();' checked>Relais 8");
+          }
+ 
+          client.println("</form>");
+          client.println("</body></html>");
+          readString="";
+          client.stop();
+        }
+      }
+    }
+  }
+}
